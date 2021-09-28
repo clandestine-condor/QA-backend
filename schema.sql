@@ -1,0 +1,5 @@
+CREATE DATABASE QA;
+
+CREATE TABLE questions(
+    
+)
