@@ -10,7 +10,51 @@ const { Mongoose } = require("mongoose");
 // db.once('open', function() {
 //     console.log('Connected!')
 // });
+// const photos = mongoose.model(
+//     "photos",
+//     new mongoose.Schema({
+//         pId: Number,
+//         url: String
+//     })
+// );
 
-const qa = new Mongoose.schema({
-    
-})
+const answers = mongoose.model(
+    "answers",
+    new mongoose.Schema({
+        aId: Number,
+        body: String,
+        answererName: String,
+        helpfulness: Number,
+        reported: Boolean,
+        data: Date,
+        questionId: Number, // two-way connection
+        photos: [
+            String 
+        ]
+    })
+);
+
+const questions = mongoose.model(
+    "questions",
+    new mongoose.Schema({
+        questionId: Number,
+        questionBody: String,
+        questionDate: Date,
+        askerName: String,
+        questionHelpfulness: Number,
+        reported: Boolean,
+        answers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "answers"
+            }
+        ],
+        productId: Number
+        
+    })
+);
+// two way look up for mongo look up on QA
+// nest photos in array of answers or have it as entire schema
+module.exports = photos;
+module.exports = answers;
+module.exports = questions;
