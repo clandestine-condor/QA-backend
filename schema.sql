@@ -41,7 +41,7 @@ CREATE TABLE questions(
     reported BOOLEAN DEFAULT FALSE,
     question_helpfulness INT DEFAULT 0,
     PRIMARY KEY (question_id)
-)
+);
 
 --  \copy questions(question_id, product_id, question_body, question_date, asker_name, asker_email, reported, question_helpfulness)
 -- FROM '/Users/nickwai1/Desktop/questions.csv'
