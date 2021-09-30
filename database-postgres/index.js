@@ -1,9 +1,15 @@
-const { Client } = require('pg');
-const client = new Client ()
-
-client.connect()
-
-client.query('SELECT $1::text as message', ['Hello world!'], (err, res) => {
-    console.log(err ? err.stack : res.rows[0].message) // Hello World!
-    client.end()
+const { Pool } = require('pg');
+const pool = new Pool({
+    user: 'nick',
+    host: 'localhost',
+    database: 'postgres',
+    password: '',
+    post: 3211,
 })
+
+pool.query('SELECT $1::text as message', ['Hello from DB!'], (err, res) => {
+    console.log(err ? err.stack : res.rows[0].message) // Hello World!
+    pool.end()
+})
+
+module.exports = pool;
