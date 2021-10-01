@@ -33,7 +33,7 @@ CREATE TABLE answers (
 -- FOREIGN KEY (photo_id) REFERENCES photos(photo_id)
 
 CREATE TABLE questions (
-    q_id INT NOT NULL,
+    question_id INT NOT NULL,
     product_id INT NOT NULL,
     question_body VARCHAR(1000),
     question_date VARCHAR(100) NOT NULL,
