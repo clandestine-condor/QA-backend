@@ -41,7 +41,6 @@ CREATE TABLE questions (
     asker_email VARCHAR(50),
     reported BOOLEAN DEFAULT FALSE,
     question_helpfulness INT DEFAULT 0,
-    answer_id INT,
     PRIMARY KEY (question_id)
 );
 
@@ -54,3 +53,13 @@ ALTER TABLE photos ADD CONSTRAINT photofk FOREIGN KEY (answer_id) REFERENCES ans
 ALTER TABLE answers ADD CONSTRAINT answfk FOREIGN KEY (question_id) REFERENCES question (id);
 ALTER TABLE answers ADD CONSTRAINT answfk FOREIGN KEY (photo_id) REFERENCES photos (id);
 ALTER TABLE questions ADD CONSTRAINT quesfk FOREIGN KEY (answer_id) REFERENCES answers (id);
+
+ALTER TABLE questions 
+ALTER COLUMN question_date TYPE bigint USING (question_date::bigint);
+
+ALTER TABLE answers
+ALTER COLUMN answer_date TYPE bigint USING (answer_date::bigint);
+
+CREATE INDEX photos_answerid on photos (answer_id);
+CREATE INDEX answers_questionid on answers (question_id);
+CREATE INDEX questions_productid on questions (product_id);
