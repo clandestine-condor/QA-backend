@@ -31,9 +31,16 @@ app.get('/qa/questions/:id', (req, res) => {
                         questions.question_id`;
     
     db.query(query, [id], (err, result) => {
-        if(err) {
+        if (err) {
             res.status(404).send(err);
         } else {
+            const ans = result.rows[0].answers;
+            for (const a in ans ) {   
+                let  answer = ans[a];
+                    if ( answer.photos === null) {  
+                        answer.photos = [];
+                    }
+            }
             const questions = {product_id: id, results: [result.rows[0]]};
             res.send(questions);
         }
@@ -43,9 +50,10 @@ app.get('/qa/questions/:id', (req, res) => {
 app.get('/qa/questions/:id/answers', (req, res) => {
     const {id} = req.params;
     const query = `SELECT
-                        jsonb_agg(json_build_object('answer_id', a_id, 'body', body, 'date', to_timestamp(answer_date / 1000), 'answerer_name', answerer_name, 'helpfulness', helpfulness, 'photos', (
+                        json_agg(json_build_object('answer_id', a_id, 'body', body, 'date', to_timestamp(answer_date / 1000), 'answerer_name', answerer_name, 'helpfulness', helpfulness, 'photos', (
                                     SELECT
-                                        json_agg(json_build_object('id', p_id, 'url', url))
+                                    coalesce(
+                                        json_agg(json_build_object('id', p_id, 'url', url)), '[]')
                                         FROM photos
                                     WHERE
                                         photos.answer_id = answers.a_id
@@ -60,10 +68,15 @@ app.get('/qa/questions/:id/answers', (req, res) => {
                         questions.question_id`;
     db.query(query, [id], (err, result) => {
         if(err) {
-            console.log(err)
             res.status(404).send(err);
         } else {
-            const answers = {question: id, page: 0, count: 5, results: result.rows[0].jsonb_agg};
+            const ans = result.rows[0].json_agg;
+            for (const a of ans) {
+                if ( a.photos === null) {  
+                    a.photos = [];
+                }
+            }
+            const answers = {question: id, page: 0, count: 5, results: ans};
             res.send(answers);
         }
     });
