@@ -1,11 +1,8 @@
 const { Pool } = require('pg');
+const env = require('../config.js');
 
-const pool = new Pool({
-    user: 'nick',
-    host: 'localhost',
-    database: 'postgres',
-    password: '',
-    post: 5432,
-});
+const pool = new Pool(env);
 
 module.exports = pool;
+
+// create config.js file or .env -- git ignore .js files
