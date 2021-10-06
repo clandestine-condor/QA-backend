@@ -64,8 +64,7 @@ app.get('/qa/questions/:id/answers', (req, res) => {
     const query = `SELECT
                         json_agg(json_build_object('answer_id', a_id, 'body', body, 'date', to_timestamp(answer_date / 1000), 'answerer_name', answerer_name, 'helpfulness', helpfulness, 'photos', (
                                     SELECT
-                                    coalesce(
-                                        json_agg(json_build_object('id', p_id, 'url', url)), '[]')
+                                        json_agg(json_build_object('id', p_id, 'url', url))
                                         FROM photos
                                     WHERE
                                         photos.answer_id = answers.a_id
@@ -82,7 +81,6 @@ app.get('/qa/questions/:id/answers', (req, res) => {
         if(err) {
             res.status(404).send(err);
         } else {   
-            // console.log(result.rows)
             let r = result.rows;
             if (result.rows.length === 0) {
                 r = [];
@@ -96,7 +94,6 @@ app.get('/qa/questions/:id/answers', (req, res) => {
                         a.photos = [];
                     }
                 }
-    
                 const answers = {question: id, page: page, count: count, results: ans};
                 res.status(200).send(answers);
             }
